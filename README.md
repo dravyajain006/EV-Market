@@ -225,4 +225,5 @@ Comprehensive capstone documentation complying with collegiate guidelines is loc
 - [x] Live servers verified and operating cleanly on `http://127.0.0.1:5173` and `http://localhost:5000`
 #   E V - M a r k e t  
  #   E V - M a r k e t  
+ #   E V - M a r k e t  
  
