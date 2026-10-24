@@ -34,7 +34,7 @@ export class AuthService {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email, role: user.role, jti: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}` },
       env.JWT_SECRET,
       { expiresIn: env.JWT_EXPIRES_IN as any }
     );
@@ -43,8 +43,10 @@ export class AuthService {
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 7);
 
-    await prisma.session.create({
-      data: {
+    await prisma.session.upsert({
+      where: { token },
+      update: { expiresAt, ipAddress, userAgent },
+      create: {
         token,
         userId: user.id,
         expiresAt,
