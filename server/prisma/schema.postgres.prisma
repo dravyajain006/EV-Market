@@ -1,0 +1,268 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  fullName     String
+  role         String      @default("VIEWER")
+  department   String?
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  sessions     Session[]
+  auditLogs    AuditLog[]
+  datasets     Dataset[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("sessions")
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+model DimRegion {
+  id               String               @id @default(cuid())
+  stateCode        String               @unique @map("state_code")
+  stateName        String               @map("state_name")
+  zone             String
+  capital          String?
+  evPolicyActive   Boolean              @default(true) @map("ev_policy_active")
+  evRegistrations  FactEvRegistration[]
+  chargingStations FactChargingStation?
+
+  @@map("dim_regions")
+}
+
+model DimCategory {
+  id                   String                    @id @default(cuid())
+  categoryCode         String                    @unique @map("category_code")
+  categoryName         String                    @map("category_name")
+  description          String?
+  fameSubsidyEligible  Boolean                   @default(true) @map("fame_subsidy_eligible")
+  evRegistrations      FactEvRegistration[]
+  manufacturerRankings FactManufacturerRanking[]
+
+  @@map("dim_categories")
+}
+
+model DimManufacturer {
+  id            String                    @id @default(cuid())
+  name          String                    @unique
+  category      String
+  originCountry String                    @map("origin_country")
+  headquarters  String?
+  isIndianOEM   Boolean                   @default(true) @map("is_indian_oem")
+  foundedYear   Int?                      @map("founded_year")
+  rankings      FactManufacturerRanking[]
+
+  @@map("dim_manufacturers")
+}
+
+model FactEvRegistration {
+  id                         String      @id @default(cuid())
+  regionId                   String      @map("region_id")
+  region                     DimRegion   @relation(fields: [regionId], references: [id])
+  categoryId                 String      @map("category_id")
+  category                   DimCategory @relation(fields: [categoryId], references: [id])
+  year                       Int
+  month                      Int?        @default(12)
+  evRegistrations            Int         @map("ev_registrations")
+  totalVehicleRegistrations  Int         @map("total_vehicle_registrations")
+  evPenetrationPct           Float       @map("ev_penetration_pct")
+  yoyGrowthPct               Float?      @map("yoy_growth_pct")
+  dataSource                 String      @default("VAHAN_PUBLIC_DASHBOARD") @map("data_source")
+  createdAt                  DateTime    @default(now()) @map("created_at")
+
+  @@unique([regionId, categoryId, year])
+  @@index([year])
+  @@index([regionId])
+  @@index([categoryId])
+  @@map("fact_ev_registrations")
+}
+
+model FactManufacturerRanking {
+  id                  String          @id @default(cuid())
+  manufacturerId      String          @map("manufacturer_id")
+  manufacturer        DimManufacturer @relation(fields: [manufacturerId], references: [id])
+  categoryId          String          @map("category_id")
+  category            DimCategory     @relation(fields: [categoryId], references: [id])
+  year                Int
+  annualRegistrations Int             @map("annual_registrations")
+  marketSharePct      Float           @map("market_share_pct")
+  nationalRank        Int             @map("national_rank")
+
+  @@unique([manufacturerId, categoryId, year])
+  @@index([year])
+  @@index([categoryId])
+  @@map("fact_manufacturer_rankings")
+}
+
+model FactChargingStation {
+  id                       String    @id @default(cuid())
+  regionId                 String    @unique @map("region_id")
+  region                   DimRegion @relation(fields: [regionId], references: [id])
+  sanctionedStations       Int       @map("sanctioned_stations")
+  operationalStations       Int       @map("operational_stations")
+  fastChargersDc           Int       @map("fast_chargers_dc")
+  slowChargersAc           Int       @map("slow_chargers_ac")
+  highwayCorridorChargers  Int       @map("highway_corridor_chargers")
+  commissioningRatePct     Float     @map("commissioning_rate_pct")
+  scheme                   String    @default("PM_E_DRIVE")
+  updatedAt                DateTime  @default(now()) @map("updated_at")
+
+  @@map("fact_charging_stations")
+}
+
+model FactGlobalEvMarket {
+  id                    String @id @default(cuid())
+  region                String
+  year                  Int
+  powertrain            String
+  vehicleType           String @map("vehicle_type")
+  annualSalesThousands  Float  @map("annual_sales_thousands")
+  stockThousands        Float  @map("stock_thousands")
+  evSalesSharePct       Float  @map("ev_sales_share_pct")
+  dataSource            String @default("IEA_GLOBAL_EV_DATA_EXPLORER") @map("data_source")
+
+  @@unique([region, year, powertrain, vehicleType])
+  @@index([region])
+  @@index([year])
+  @@map("fact_global_ev_market")
+}
+
+model Dataset {
+  id             String              @id @default(cuid())
+  name           String
+  description    String?
+  sourceUrl      String?             @map("source_url")
+  retrievalDate  DateTime            @default(now()) @map("retrieval_date")
+  fileType       String              @default("CSV") @map("file_type")
+  rowCount       Int                 @default(0) @map("row_count")
+  status         String              @default("ACTIVE")
+  uploadedById   String?             @map("uploaded_by_id")
+  uploadedBy     User?               @relation(fields: [uploadedById], references: [id])
+  importJobs     ImportJob[]
+  qualityReports DataQualityReport[]
+  createdAt      DateTime            @default(now()) @map("created_at")
+  updatedAt      DateTime            @updatedAt @map("updated_at")
+
+  @@map("datasets")
+}
+
+model ImportJob {
+  id          String        @id @default(cuid())
+  datasetId   String        @map("dataset_id")
+  dataset     Dataset       @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  fileName    String        @map("file_name")
+  status      String        @default("COMPLETED")
+  totalRows   Int           @default(0) @map("total_rows")
+  validRows   Int           @default(0) @map("valid_rows")
+  errorRows   Int           @default(0) @map("error_rows")
+  startedAt   DateTime      @default(now()) @map("started_at")
+  completedAt DateTime?     @map("completed_at")
+  errors      ImportError[]
+
+  @@map("import_jobs")
+}
+
+model ImportError {
+  id           String    @id @default(cuid())
+  importJobId  String    @map("import_job_id")
+  importJob    ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+  rowNumber    Int       @map("row_number")
+  column       String?
+  value        String?
+  errorCode    String    @map("error_code")
+  errorMessage String    @map("error_message")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@map("import_errors")
+}
+
+model DataQualityReport {
+  id                String   @id @default(cuid())
+  datasetId         String   @map("dataset_id")
+  dataset           Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  completenessScore Float    @map("completeness_score")
+  duplicateCount    Int      @default(0) @map("duplicate_count")
+  missingValueCount Int      @default(0) @map("missing_value_count")
+  validationScore   Float    @map("validation_score")
+  summary           String?
+  generatedAt       DateTime @default(now()) @map("generated_at")
+
+  @@map("data_quality_reports")
+}
+
+model ForecastModel {
+  id                   String          @id @default(cuid())
+  targetMetric         String          @map("target_metric")
+  algorithm            String
+  trainingStartYear    Int             @map("training_start_year")
+  trainingEndYear      Int             @map("training_end_year")
+  forecastHorizonYears Int             @map("forecast_horizon_years")
+  mae                  Float
+  rmse                 Float
+  mape                 Float
+  trainedAt            DateTime        @default(now()) @map("trained_at")
+  values               ForecastValue[]
+
+  @@map("forecast_models")
+}
+
+model ForecastValue {
+  id             String        @id @default(cuid())
+  modelId        String        @map("model_id")
+  model          ForecastModel @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  forecastYear   Int           @map("forecast_year")
+  predictedValue Float         @map("predicted_value")
+  lowerBound95   Float         @map("lower_bound_95")
+  upperBound95   Float         @map("upper_bound_95")
+  baselineValue  Float?        @map("baseline_value")
+  isActual       Boolean       @default(false) @map("is_actual")
+
+  @@map("forecast_values")
+}
+
+model PowerBIReportConfig {
+  id              String   @id @default(cuid())
+  reportName      String   @map("report_name")
+  reportId        String   @map("report_id")
+  workspaceId     String   @map("workspace_id")
+  embedUrl        String   @map("embed_url")
+  targetAudience  String   @default("Executive Leadership & Analysts") @map("target_audience")
+  daxMeasureCount Int      @default(18) @map("dax_measure_count")
+  lastRefreshedAt DateTime @default(now()) @map("last_refreshed_at")
+
+  @@map("power_bi_report_configs")
+}

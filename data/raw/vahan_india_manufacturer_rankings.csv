@@ -1,0 +1,91 @@
+manufacturer,category,year,annual_registrations,market_share_pct,national_rank,origin_country,headquarters
+Ola Electric,2W,2021,14340,9.7,3,India,Bengaluru
+Ola Electric,2W,2022,109395,17.4,1,India,Bengaluru
+Ola Electric,2W,2023,267150,31.2,1,India,Bengaluru
+Ola Electric,2W,2024,329000,34.8,1,India,Bengaluru
+Ola Electric,2W,2025,398500,34.2,1,India,Bengaluru
+TVS Motor Company,2W,2021,5298,3.6,5,India,Chennai
+TVS Motor Company,2W,2022,46900,7.5,3,India,Chennai
+TVS Motor Company,2W,2023,166400,19.4,2,India,Chennai
+TVS Motor Company,2W,2024,204500,21.6,2,India,Chennai
+TVS Motor Company,2W,2025,255000,21.9,2,India,Chennai
+Bajaj Auto,2W,2021,4120,2.8,6,India,Pune
+Bajaj Auto,2W,2022,25400,4.0,5,India,Pune
+Bajaj Auto,2W,2023,71800,8.4,4,India,Pune
+Bajaj Auto,2W,2024,142000,15.0,3,India,Pune
+Bajaj Auto,2W,2025,198000,17.0,3,India,Pune
+Ather Energy,2W,2021,15900,10.8,2,India,Bengaluru
+Ather Energy,2W,2022,51800,8.2,2,India,Bengaluru
+Ather Energy,2W,2023,104500,12.2,3,India,Bengaluru
+Ather Energy,2W,2024,115400,12.2,4,India,Bengaluru
+Ather Energy,2W,2025,148200,12.7,4,India,Bengaluru
+Hero Electric,2W,2021,46200,31.3,1,India,Gurugram
+Hero Electric,2W,2022,65400,10.4,4,India,Gurugram
+Hero Electric,2W,2023,18200,2.1,8,India,Gurugram
+Hero Electric,2W,2024,12400,1.3,9,India,Gurugram
+Hero Electric,2W,2025,9800,0.8,11,India,Gurugram
+Greaves Electric (Ampere),2W,2021,12400,8.4,4,India,Coimbatore
+Greaves Electric (Ampere),2W,2022,42500,6.8,6,India,Coimbatore
+Greaves Electric (Ampere),2W,2023,45600,5.3,5,India,Coimbatore
+Greaves Electric (Ampere),2W,2024,38200,4.0,5,India,Coimbatore
+Greaves Electric (Ampere),2W,2025,44100,3.8,5,India,Coimbatore
+Tata Motors,4W,2021,9850,71.2,1,India,Mumbai
+Tata Motors,4W,2022,34200,80.5,1,India,Mumbai
+Tata Motors,4W,2023,55800,73.4,1,India,Mumbai
+Tata Motors,4W,2024,71400,68.2,1,India,Mumbai
+Tata Motors,4W,2025,92800,66.1,1,India,Mumbai
+MG Motor India,4W,2021,2800,20.2,2,UK/China,Gurugram
+MG Motor India,4W,2022,4500,10.6,2,UK/China,Gurugram
+MG Motor India,4W,2023,11200,14.7,2,UK/China,Gurugram
+MG Motor India,4W,2024,18600,17.8,2,UK/China,Gurugram
+MG Motor India,4W,2025,27400,19.5,2,UK/China,Gurugram
+Mahindra & Mahindra,4W,2021,480,3.5,3,India,Mumbai
+Mahindra & Mahindra,4W,2022,1200,2.8,4,India,Mumbai
+Mahindra & Mahindra,4W,2023,4200,5.5,3,India,Mumbai
+Mahindra & Mahindra,4W,2024,7800,7.5,3,India,Mumbai
+Mahindra & Mahindra,4W,2025,11600,8.3,3,India,Mumbai
+Hyundai Motor India,4W,2021,240,1.7,4,South Korea,Gurugram
+Hyundai Motor India,4W,2022,580,1.4,5,South Korea,Gurugram
+Hyundai Motor India,4W,2023,1650,2.2,5,South Korea,Gurugram
+Hyundai Motor India,4W,2024,2450,2.3,5,South Korea,Gurugram
+Hyundai Motor India,4W,2025,3850,2.7,5,South Korea,Gurugram
+BYD India,4W,2021,50,0.4,6,China,Chennai
+BYD India,4W,2022,320,0.8,6,China,Chennai
+BYD India,4W,2023,2150,2.8,4,China,Chennai
+BYD India,4W,2024,3120,3.0,4,China,Chennai
+BYD India,4W,2025,4650,3.3,4,China,Chennai
+Mahindra Last Mile Mobility,3W,2021,12400,8.2,3,India,Mumbai
+Mahindra Last Mile Mobility,3W,2022,29800,9.5,2,India,Mumbai
+Mahindra Last Mile Mobility,3W,2023,54200,11.2,1,India,Mumbai
+Mahindra Last Mile Mobility,3W,2024,78500,13.4,1,India,Mumbai
+Mahindra Last Mile Mobility,3W,2025,98400,14.2,1,India,Mumbai
+YC Electric Vehicles,3W,2021,18500,12.2,1,India,Delhi
+YC Electric Vehicles,3W,2022,32400,10.3,1,India,Delhi
+YC Electric Vehicles,3W,2023,41800,8.6,2,India,Delhi
+YC Electric Vehicles,3W,2024,49600,8.5,2,India,Delhi
+YC Electric Vehicles,3W,2025,56200,8.1,2,India,Delhi
+Saera Electric Auto,3W,2021,14200,9.4,2,India,Gurugram
+Saera Electric Auto,3W,2022,24600,7.8,3,India,Gurugram
+Saera Electric Auto,3W,2023,31200,6.4,3,India,Gurugram
+Saera Electric Auto,3W,2024,38500,6.6,3,India,Gurugram
+Saera Electric Auto,3W,2025,44800,6.5,3,India,Gurugram
+Piaggio Vehicles,3W,2021,4800,3.2,5,Italy/India,Pune
+Piaggio Vehicles,3W,2022,11200,3.6,5,Italy/India,Pune
+Piaggio Vehicles,3W,2023,22400,4.6,4,Italy/India,Pune
+Piaggio Vehicles,3W,2024,31200,5.3,4,Italy/India,Pune
+Piaggio Vehicles,3W,2025,39400,5.7,4,Italy/India,Pune
+Tata Motors,BUS,2021,420,38.2,1,India,Mumbai
+Tata Motors,BUS,2022,1150,44.2,1,India,Mumbai
+Tata Motors,BUS,2023,1950,42.4,1,India,Mumbai
+Tata Motors,BUS,2024,2840,41.2,1,India,Mumbai
+Tata Motors,BUS,2025,3920,40.8,1,India,Mumbai
+Olectra Greentech,BUS,2021,340,30.9,2,India,Hyderabad
+Olectra Greentech,BUS,2022,780,30.0,2,India,Hyderabad
+Olectra Greentech,BUS,2023,1420,30.9,2,India,Hyderabad
+Olectra Greentech,BUS,2024,2150,31.2,2,India,Hyderabad
+Olectra Greentech,BUS,2025,2980,31.0,2,India,Hyderabad
+JBM Auto,BUS,2021,190,17.3,3,India,Gurugram
+JBM Auto,BUS,2022,410,15.8,3,India,Gurugram
+JBM Auto,BUS,2023,820,17.8,3,India,Gurugram
+JBM Auto,BUS,2024,1280,18.6,3,India,Gurugram
+JBM Auto,BUS,2025,1820,19.0,3,India,Gurugram

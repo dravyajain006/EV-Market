@@ -1,0 +1,128 @@
+// ==============================================================================
+// MICROSOFT POWER BI DESKTOP — VERIFIED DAX MEASURES LIBRARY
+// Project: EV Market Analysis and Business Intelligence Dashboard
+// Schema: Star Schema (dim_regions, dim_categories, dim_manufacturers, fact_ev_registrations)
+// ==============================================================================
+
+// --- 1. CORE REGISTRATION MEASURES ---
+
+[Total EV Registrations] = 
+SUM(fact_ev_registrations[ev_registrations])
+
+[Total Vehicle Registrations (All Powertrains)] = 
+SUM(fact_ev_registrations[total_vehicle_registrations])
+
+[Non-EV Registrations (ICE)] = 
+[Total Vehicle Registrations (All Powertrains)] - [Total EV Registrations]
+
+
+// --- 2. PENETRATION & ADOPTION RATES ---
+
+[EV Penetration %] = 
+DIVIDE(
+    [Total EV Registrations],
+    [Total Vehicle Registrations (All Powertrains)],
+    0
+)
+
+[EV Penetration Label] = 
+FORMAT([EV Penetration %], "0.00%")
+
+
+// --- 3. TIME INTELLIGENCE & ACCELERATION ---
+
+[Previous Year EV Registrations] = 
+CALCULATE(
+    [Total EV Registrations],
+    SAMEPERIODLASTYEAR(dim_date[Date])
+)
+
+[YoY EV Registration Growth] = 
+[Total EV Registrations] - [Previous Year EV Registrations]
+
+[YoY EV Growth %] = 
+DIVIDE(
+    [YoY EV Registration Growth],
+    [Previous Year EV Registrations],
+    BLANK()
+)
+
+[YoY Growth Label] = 
+IF(
+    ISBLANK([YoY EV Growth %]),
+    "Baseline Observation (2018)",
+    FORMAT([YoY EV Growth %], "+0.00%;-0.00%;0.00%")
+)
+
+
+// --- 4. OEM & MARKET SHARE MEASURES ---
+
+[Manufacturer EV Registrations] = 
+SUM(fact_manufacturer_rankings[annual_registrations])
+
+[Total Segment EV Registrations] = 
+CALCULATE(
+    [Manufacturer EV Registrations],
+    ALL(dim_manufacturers)
+)
+
+[Manufacturer Market Share %] = 
+DIVIDE(
+    [Manufacturer EV Registrations],
+    [Total Segment EV Registrations],
+    0
+)
+
+[Top OEM Name] = 
+TOPN(
+    1,
+    VALUES(dim_manufacturers[name]),
+    [Manufacturer EV Registrations],
+    DESC
+)
+
+
+// --- 5. CHARGING INFRASTRUCTURE MEASURES ---
+
+[Sanctioned Charging Stations] = 
+SUM(fact_charging_stations[sanctioned_stations])
+
+[Operational Fast Chargers] = 
+SUM(fact_charging_stations[operational_stations])
+
+[DC Fast Chargers (>=50kW)] = 
+SUM(fact_charging_stations[fast_chargers_dc])
+
+[Highway Charging Corridors] = 
+SUM(fact_charging_stations[highway_corridor_chargers])
+
+[Charging Commissioning Rate %] = 
+DIVIDE(
+    [Operational Fast Chargers],
+    [Sanctioned Charging Stations],
+    0
+)
+
+[EV to Public Charger Ratio] = 
+DIVIDE(
+    [Total EV Registrations],
+    [Operational Fast Chargers],
+    0
+)
+
+
+// --- 6. DATA HEALTH & PROVENANCE MEASURES ---
+
+[Data Completeness %] = 
+VAR TotalExpected = COUNTROWS(fact_ev_registrations) * 5
+VAR NonNullValues = 
+    COUNTROWS(FILTER(fact_ev_registrations, NOT(ISBLANK(fact_ev_registrations[ev_registrations])))) +
+    COUNTROWS(FILTER(fact_ev_registrations, NOT(ISBLANK(fact_ev_registrations[total_vehicle_registrations])))) +
+    COUNTROWS(FILTER(fact_ev_registrations, NOT(ISBLANK(fact_ev_registrations[region_id])))) +
+    COUNTROWS(FILTER(fact_ev_registrations, NOT(ISBLANK(fact_ev_registrations[category_id])))) +
+    COUNTROWS(FILTER(fact_ev_registrations, NOT(ISBLANK(fact_ev_registrations[year]))))
+RETURN
+DIVIDE(NonNullValues, TotalExpected, 0)
+
+[Latest Observation Year] = 
+MAX(fact_ev_registrations[year])

@@ -1,0 +1,13 @@
+{
+  "name": "ev-market-analysis-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EV Market Analysis and Business Intelligence Dashboard - Root Workspace",
+  "scripts": {
+    "test": "npm --prefix server test",
+    "forecast": "npm --prefix server run forecast",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "seed": "npm --prefix server run prisma:seed"
+  }
+}
