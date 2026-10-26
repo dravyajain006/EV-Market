@@ -28,6 +28,7 @@ import {
 } from 'recharts';
 import api from '../services/api';
 import { OverviewData, TrendPoint, RegionData } from '../types';
+import fallbackData from '../services/fallbackData.json';
 import { KpiCard } from '../components/common/KpiCard';
 import { ChartCard } from '../components/common/ChartCard';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
@@ -45,6 +46,10 @@ export const OverviewPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+      const defaultOverview = (fallbackData.overview as any)[selectedYear] || (fallbackData.overview as any)[2025];
+      const defaultTrends = (fallbackData.trends as any)?.nationalTrends || [];
+      const defaultRegions = (fallbackData.regions as any)[selectedYear] || (fallbackData.regions as any)[2025] || [];
+
       try {
         const [overviewRes, trendsRes, regionsRes]: any = await Promise.all([
           api.get(`/analytics/overview?year=${selectedYear}`),
@@ -52,11 +57,14 @@ export const OverviewPage: React.FC = () => {
           api.get(`/analytics/regions?year=${selectedYear}`),
         ]);
 
-        if (overviewRes.success) setData(overviewRes.data);
-        if (trendsRes.success) setTrends(trendsRes.data.nationalTrends);
-        if (regionsRes.success) setRegions(regionsRes.data);
+        setData(overviewRes && overviewRes.success && overviewRes.data ? overviewRes.data : defaultOverview);
+        setTrends(trendsRes && trendsRes.success && trendsRes.data?.nationalTrends ? trendsRes.data.nationalTrends : defaultTrends);
+        setRegions(regionsRes && regionsRes.success && regionsRes.data ? regionsRes.data : defaultRegions);
       } catch (err) {
         console.error('Failed to load dashboard overview data:', err);
+        setData(defaultOverview);
+        setTrends(defaultTrends);
+        setRegions(defaultRegions);
       } finally {
         setLoading(false);
       }

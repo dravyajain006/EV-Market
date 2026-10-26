@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 import { ColumnDef } from '@tanstack/react-table';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { RegionData } from '../types';
 import { ChartCard } from '../components/common/ChartCard';
 import { DataTable } from '../components/common/DataTable';
@@ -28,14 +29,22 @@ export const GeographicPage: React.FC = () => {
   useEffect(() => {
     const fetchRegions = async () => {
       setLoading(true);
+      const zoneParam = selectedZone !== 'ALL' ? `&zone=${selectedZone}` : '';
+      let defaultList = (fallbackData.regions as any)[selectedYear] || (fallbackData.regions as any)[2025] || [];
+      if (selectedZone !== 'ALL') {
+        defaultList = defaultList.filter((r: any) => r.zone.toLowerCase() === selectedZone.toLowerCase());
+      }
+
       try {
-        const zoneParam = selectedZone !== 'ALL' ? `&zone=${selectedZone}` : '';
         const res: any = await api.get(`/analytics/regions?year=${selectedYear}${zoneParam}`);
-        if (res.success) {
+        if (res && res.success && Array.isArray(res.data)) {
           setRegions(res.data);
+        } else {
+          setRegions(defaultList);
         }
       } catch (err) {
         console.error('Failed to load geographic data:', err);
+        setRegions(defaultList);
       } finally {
         setLoading(false);
       }

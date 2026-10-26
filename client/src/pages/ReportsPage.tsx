@@ -2,27 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { Download, FileSpreadsheet, Filter, CheckCircle2, RefreshCw } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { DataTable } from '../components/common/DataTable';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
 import { Badge } from '../components/common/Badge';
 
 export const ReportsPage: React.FC = () => {
-  const [records, setRecords] = useState<any[]>([]);
+  const initialRecords = (fallbackData.regions as any)[2025] || [];
+  const [records, setRecords] = useState<any[]>(initialRecords);
   const [yearFilter, setYearFilter] = useState<number>(2025);
   const [zoneFilter, setZoneFilter] = useState<string>('ALL');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchReportsData = async () => {
-      setLoading(true);
+      let defaultList = (fallbackData.regions as any)[yearFilter] || (fallbackData.regions as any)[2025] || [];
+      if (zoneFilter !== 'ALL') {
+        defaultList = defaultList.filter((r: any) => r.zone.toLowerCase() === zoneFilter.toLowerCase());
+      }
       try {
         const zoneParam = zoneFilter !== 'ALL' ? `&zone=${zoneFilter}` : '';
         const res: any = await api.get(`/analytics/regions?year=${yearFilter}${zoneParam}`);
-        if (res.success) {
+        if (res && res.success && Array.isArray(res.data)) {
           setRecords(res.data);
+        } else {
+          setRecords(defaultList);
         }
       } catch (err) {
         console.error('Failed to load reports data:', err);
+        setRecords(defaultList);
       } finally {
         setLoading(false);
       }

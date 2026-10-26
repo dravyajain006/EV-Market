@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 import { ColumnDef } from '@tanstack/react-table';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { ManufacturerData } from '../types';
 import { ChartCard } from '../components/common/ChartCard';
 import { DataTable } from '../components/common/DataTable';
@@ -33,14 +34,22 @@ export const ManufacturersPage: React.FC = () => {
   useEffect(() => {
     const fetchManufacturers = async () => {
       setLoading(true);
+      const catParam = categoryFilter !== 'ALL' ? `&categoryCode=${categoryFilter}` : '';
+      let defaultList = (fallbackData.manufacturers as any)[selectedYear] || (fallbackData.manufacturers as any)[2025] || [];
+      if (categoryFilter !== 'ALL') {
+        defaultList = defaultList.filter((m: any) => m.categoryCode.toLowerCase() === categoryFilter.toLowerCase());
+      }
+
       try {
-        const catParam = categoryFilter !== 'ALL' ? `&categoryCode=${categoryFilter}` : '';
         const res: any = await api.get(`/analytics/manufacturers?year=${selectedYear}${catParam}`);
-        if (res.success) {
+        if (res && res.success && Array.isArray(res.data)) {
           setManufacturers(res.data);
+        } else {
+          setManufacturers(defaultList);
         }
       } catch (err) {
         console.error('Failed to load manufacturers:', err);
+        setManufacturers(defaultList);
       } finally {
         setLoading(false);
       }

@@ -10,27 +10,29 @@ import {
   Server,
 } from 'lucide-react';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { useAuth } from '../context/AuthContext';
 import { UserRole } from '../types';
 import { Badge } from '../components/common/Badge';
 
 export const AdminPage: React.FC = () => {
   const { role, switchDemoRole } = useAuth();
-  const [users, setUsers] = useState<any[]>([]);
-  const [auditLogs, setAuditLogs] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialUsers = (fallbackData.users as any[]) || [];
+  const initialLogs = (fallbackData.auditLogs as any[]) || [];
+  const [users, setUsers] = useState<any[]>(initialUsers);
+  const [auditLogs, setAuditLogs] = useState<any[]>(initialLogs);
+  const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const fetchAdminData = async () => {
-    setLoading(true);
     try {
       const [usersRes, logsRes]: any = await Promise.all([
         api.get('/admin/users'),
         api.get('/admin/audit-logs'),
       ]);
 
-      if (usersRes.success) setUsers(usersRes.data);
-      if (logsRes.success) setAuditLogs(logsRes.data);
+      if (usersRes && usersRes.success && Array.isArray(usersRes.data)) setUsers(usersRes.data);
+      if (logsRes && logsRes.success && Array.isArray(logsRes.data)) setAuditLogs(logsRes.data);
     } catch (err) {
       console.error('Failed to load admin data:', err);
     } finally {

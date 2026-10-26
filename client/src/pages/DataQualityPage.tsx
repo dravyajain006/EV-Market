@@ -9,20 +9,21 @@ import {
   Lock,
 } from 'lucide-react';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { DatasetItem } from '../types';
 import { KpiCard } from '../components/common/KpiCard';
 import { Badge } from '../components/common/Badge';
 
 export const DataQualityPage: React.FC = () => {
-  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const initialDatasets = (fallbackData.datasets as any[]) || [];
+  const [datasets, setDatasets] = useState<DatasetItem[]>(initialDatasets);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchDatasets = async () => {
-      setLoading(true);
       try {
         const res: any = await api.get('/datasets');
-        if (res.success) setDatasets(res.data);
+        if (res && res.success && Array.isArray(res.data)) setDatasets(res.data);
       } catch (err) {
         console.error('Failed to load datasets:', err);
       } finally {

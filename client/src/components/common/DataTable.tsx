@@ -20,16 +20,17 @@ interface DataTableProps<TData> {
 }
 
 export function DataTable<TData>({
-  data,
+  data = [],
   columns,
   searchPlaceholder = 'Search records...',
   onExportCsv,
 }: DataTableProps<TData>) {
+  const safeData = React.useMemo(() => (Array.isArray(data) ? data : []), [data]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState('');
 
   const table = useReactTable({
-    data,
+    data: safeData,
     columns,
     state: {
       sorting,

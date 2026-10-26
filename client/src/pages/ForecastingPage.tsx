@@ -19,22 +19,25 @@ import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
 import { Badge } from '../components/common/Badge';
 import { TrendingUp, Activity, CheckCircle, RefreshCw, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import fallbackData from '../services/fallbackData.json';
 
 export const ForecastingPage: React.FC = () => {
   const { role } = useAuth();
-  const [model, setModel] = useState<ForecastModelData | null>(null);
+  const defaultModel = (fallbackData.forecasts?.[0] as any) || null;
+  const [model, setModel] = useState<ForecastModelData | null>(defaultModel);
   const [horizonYears, setHorizonYears] = useState<number>(5);
   const [alpha, setAlpha] = useState<number>(0.45);
   const [beta, setBeta] = useState<number>(0.25);
   const [isComputing, setIsComputing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const fetchForecasts = async () => {
-    setLoading(true);
     try {
       const res: any = await api.get('/forecasts');
-      if (res.success && res.data.length > 0) {
+      if (res && res.success && res.data && res.data.length > 0) {
         setModel(res.data[0]);
+      } else if (Array.isArray(res) && res.length > 0) {
+        setModel(res[0]);
       }
     } catch (err) {
       console.error('Failed to load forecasts:', err);

@@ -10,13 +10,15 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import api from '../services/api';
+import fallbackData from '../services/fallbackData.json';
 import { DatasetItem } from '../types';
 import { Badge } from '../components/common/Badge';
 import { useAuth } from '../context/AuthContext';
 
 export const DataManagementPage: React.FC = () => {
   const { role } = useAuth();
-  const [datasets, setDatasets] = useState<DatasetItem[]>([]);
+  const initialDatasets = (fallbackData.datasets as any[]) || [];
+  const [datasets, setDatasets] = useState<DatasetItem[]>(initialDatasets);
   const [isUploading, setIsUploading] = useState(false);
   const [isCommitting, setIsCommitting] = useState(false);
   const [uploadResult, setUploadResult] = useState<any | null>(null);
@@ -27,7 +29,7 @@ export const DataManagementPage: React.FC = () => {
   const fetchDatasets = async () => {
     try {
       const res: any = await api.get('/datasets');
-      if (res.success) setDatasets(res.data);
+      if (res && res.success && Array.isArray(res.data)) setDatasets(res.data);
     } catch (err) {
       console.error('Failed to list datasets:', err);
     }

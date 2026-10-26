@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import api from '../services/api';
 import { PowerBIReport, DaxMeasure } from '../types';
+import fallbackData from '../services/fallbackData.json';
 import { Badge } from '../components/common/Badge';
 import { ChartCard } from '../components/common/ChartCard';
 import { LoadingSkeleton } from '../components/common/LoadingSkeleton';
@@ -27,21 +28,47 @@ export const PowerBIPage: React.FC = () => {
   useEffect(() => {
     const fetchPowerBI = async () => {
       setLoading(true);
+      const defaultReports = (fallbackData.powerbi as any)?.reports || [];
+      const defaultDax = (fallbackData.powerbi as any)?.daxMeasures || [];
+
       try {
         const [repRes, embRes]: any = await Promise.all([
           api.get('/powerbi/reports'),
           api.post('/powerbi/embed-config', { reportId: activeReportId }),
         ]);
 
-        if (repRes.success) {
-          setReports(repRes.data.reports);
-          setDaxMeasures(repRes.data.daxMeasures);
+        if (repRes && repRes.success && repRes.data) {
+          setReports(repRes.data.reports || defaultReports);
+          setDaxMeasures(repRes.data.daxMeasures || defaultDax);
+        } else {
+          setReports(defaultReports);
+          setDaxMeasures(defaultDax);
         }
-        if (embRes.success) {
+
+        if (embRes && embRes.success && embRes.data) {
           setEmbedConfig(embRes.data);
+        } else {
+          setEmbedConfig({
+            reportId: activeReportId,
+            reportName: 'Executive EV Analytics Suite',
+            embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=' + activeReportId,
+            embedToken: 'mock_token',
+            isLiveAzure: false,
+            nativeFallbackAvailable: true,
+          });
         }
       } catch (err) {
         console.error('Failed to load Power BI config:', err);
+        setReports(defaultReports);
+        setDaxMeasures(defaultDax);
+        setEmbedConfig({
+          reportId: activeReportId,
+          reportName: 'Executive EV Analytics Suite',
+          embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=' + activeReportId,
+          embedToken: 'mock_token',
+          isLiveAzure: false,
+          nativeFallbackAvailable: true,
+        });
       } finally {
         setLoading(false);
       }
