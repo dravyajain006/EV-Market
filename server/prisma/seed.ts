@@ -34,13 +34,39 @@ async function main() {
   const analystPassword = await bcrypt.hash('Analyst@2026!', salt);
   const viewerPassword = await bcrypt.hash('Viewer@2026!', salt);
 
-  const admin = await prisma.user.upsert({
+  const dravyaAdmin = await prisma.user.upsert({
+    where: { email: 'admindravya@ev' },
+    update: { fullName: 'Dravya Jain', role: 'ADMIN', isActive: true },
+    create: {
+      email: 'admindravya@ev',
+      passwordHash: adminPassword,
+      fullName: 'Dravya Jain',
+      role: 'ADMIN',
+      department: 'Executive Mobility Strategy & Administration',
+      isActive: true,
+    },
+  });
+
+  const karanAdmin = await prisma.user.upsert({
+    where: { email: 'adminkaran@ev' },
+    update: { fullName: 'Karan Raikwar', role: 'ADMIN', isActive: true },
+    create: {
+      email: 'adminkaran@ev',
+      passwordHash: adminPassword,
+      fullName: 'Karan Raikwar',
+      role: 'ADMIN',
+      department: 'Mobility Infrastructure & Operations',
+      isActive: true,
+    },
+  });
+
+  const defaultAdmin = await prisma.user.upsert({
     where: { email: 'admin@evmarket.internal' },
-    update: {},
+    update: { fullName: 'Dravya Jain', role: 'ADMIN', isActive: true },
     create: {
       email: 'admin@evmarket.internal',
       passwordHash: adminPassword,
-      fullName: 'Dr. Rajesh Sharma (Director)',
+      fullName: 'Dravya Jain',
       role: 'ADMIN',
       department: 'Executive Mobility Strategy & Administration',
       isActive: true,

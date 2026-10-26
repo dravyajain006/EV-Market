@@ -55,7 +55,7 @@ export class DatasetsController {
   static async getQualityReport(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const report = await DatasetsService.getDatasetQuality(id);
+      const report = await DatasetsService.getDatasetQuality(id as string);
       return sendSuccess(res, report, 'Data quality audit report retrieved');
     } catch (error) {
       next(error);

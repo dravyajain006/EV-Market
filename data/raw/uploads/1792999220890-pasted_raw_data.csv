@@ -1,0 +1,5 @@
+Battery_Type,Pack_Cost_USD_per_kWh,Energy_Density_Wh_kg,Chemistry
+LFP Blade,72,165,Lithium Iron Phosphate
+NMC 811,98,255,Nickel Manganese Cobalt
+Sodium-Ion,54,140,Sodium Iron Oxide
+Solid State Prototyping,185,380,Solid Sulfide Electrolyte

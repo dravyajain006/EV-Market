@@ -5,6 +5,10 @@
   "description": "EV Market Analysis and Business Intelligence Dashboard - Root Workspace",
   "scripts": {
     "test": "npm --prefix server test",
+    "build": "node scripts/vercel-build.js",
+    "vercel-build": "node scripts/vercel-build.js",
+    "build:client": "npm --prefix client run build",
+    "build:server": "npm --prefix server run build",
     "forecast": "npm --prefix server run forecast",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",

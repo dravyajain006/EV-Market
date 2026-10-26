@@ -190,8 +190,12 @@ export const AdminPage: React.FC = () => {
                   <td className="py-3 px-4 text-right">
                     <button
                       onClick={() => handleToggleActive(u.id, u.isActive)}
+                      disabled={['admindravya@ev', 'adminkaran@ev', 'admin@evmarket.internal'].includes(u.email)}
+                      title={['admindravya@ev', 'adminkaran@ev', 'admin@evmarket.internal'].includes(u.email) ? 'Primary admin cannot be suspended' : undefined}
                       className={`px-3 py-1 text-xs font-semibold rounded transition-colors ${
-                        u.isActive
+                        ['admindravya@ev', 'adminkaran@ev', 'admin@evmarket.internal'].includes(u.email)
+                          ? 'opacity-40 cursor-not-allowed text-slate-400 bg-slate-100'
+                          : u.isActive
                           ? 'text-rose-700 bg-rose-50 hover:bg-rose-100'
                           : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
                       }`}

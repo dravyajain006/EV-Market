@@ -16,7 +16,7 @@ export class AdminController {
     try {
       const { id } = req.params;
       const { role, isActive } = req.body;
-      const updated = await AdminService.updateUser(id, { role, isActive }, req.user?.id);
+      const updated = await AdminService.updateUser(id as string, { role, isActive }, req.user?.id);
       return sendSuccess(res, updated, 'User updated successfully');
     } catch (error) {
       next(error);

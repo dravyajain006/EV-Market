@@ -30,6 +30,11 @@ export class AdminService {
     const user = await prisma.user.findUnique({ where: { id } });
     if (!user) throw new AppError('User not found', 404);
 
+    const protectedAdmins = ['admindravya@ev', 'adminkaran@ev', 'admin@evmarket.internal'];
+    if (protectedAdmins.includes(user.email) && data.isActive === false) {
+      throw new AppError('Primary System Administrator accounts cannot be deactivated.', 400);
+    }
+
     const updated = await prisma.user.update({
       where: { id },
       data,

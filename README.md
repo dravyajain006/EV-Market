@@ -162,6 +162,12 @@ npm run dev
 
 Navigate to `http://127.0.0.1:5173` in any modern web browser.
 
+### 5.6 Deploying to Vercel (Production)
+The project is pre-configured with root and client `vercel.json` and a serverless bridge:
+1. Connect your repository to **Vercel** ([vercel.com/new](https://vercel.com/new)).
+2. Set Build Command: `npm run vercel-build` and Output Directory: `client/dist`.
+3. For detailed step-by-step instructions and database configuration, see [VERCEL_DEPLOYMENT_GUIDE.md](file:///c:/Project/docs/deployment/VERCEL_DEPLOYMENT_GUIDE.md).
+
 ---
 
 ## 6. Pre-Seeded Demo User Accounts

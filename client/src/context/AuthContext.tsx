@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  switchDemoRole: (role: UserRole) => Promise<void>;
+  switchDemoRole: (role: UserRole, specificEmail?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -81,13 +81,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const switchDemoRole = async (targetRole: UserRole) => {
+  const switchDemoRole = async (targetRole: UserRole, specificEmail?: string) => {
     setIsLoading(true);
     let email = 'analyst@evmarket.internal';
     let password = 'Analyst@2026!';
 
     if (targetRole === 'ADMIN') {
-      email = 'admin@evmarket.internal';
+      email = specificEmail || 'admindravya@ev';
       password = 'Admin@2026!';
     } else if (targetRole === 'VIEWER') {
       email = 'viewer@evmarket.internal';

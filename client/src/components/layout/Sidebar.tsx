@@ -124,20 +124,53 @@ export const Sidebar: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block mb-2">
               Demonstration Role Switcher
             </span>
-            <div className="grid grid-cols-3 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
-              {(['ADMIN', 'ANALYST', 'VIEWER'] as UserRole[]).map((r) => (
+            <div className="space-y-1.5">
+              <div className="grid grid-cols-2 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
                 <button
-                  key={r}
-                  onClick={() => switchDemoRole(r)}
+                  onClick={() => switchDemoRole('ADMIN', 'admindravya@ev')}
+                  className={`py-1 px-1 rounded font-medium transition-all text-center ${
+                    role === 'ADMIN' && user?.email === 'admindravya@ev'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'text-amber-400/90 hover:text-white hover:bg-slate-800'
+                  }`}
+                  title="Switch to Dravya Jain (admindravya@ev)"
+                >
+                  Dravya (Admin)
+                </button>
+                <button
+                  onClick={() => switchDemoRole('ADMIN', 'adminkaran@ev')}
+                  className={`py-1 px-1 rounded font-medium transition-all text-center ${
+                    role === 'ADMIN' && user?.email === 'adminkaran@ev'
+                      ? 'bg-amber-600 text-white shadow-sm'
+                      : 'text-amber-400/90 hover:text-white hover:bg-slate-800'
+                  }`}
+                  title="Switch to Karan Raikwar (adminkaran@ev)"
+                >
+                  Karan (Admin)
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800 text-[10px]">
+                <button
+                  onClick={() => switchDemoRole('ANALYST')}
                   className={`py-1 rounded font-medium transition-all ${
-                    role === r
+                    role === 'ANALYST'
                       ? 'bg-blue-600 text-white shadow-sm'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  {r}
+                  Analyst
                 </button>
-              ))}
+                <button
+                  onClick={() => switchDemoRole('VIEWER')}
+                  className={`py-1 rounded font-medium transition-all ${
+                    role === 'VIEWER'
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                  }`}
+                >
+                  Viewer
+                </button>
+              </div>
             </div>
             <p className="text-[9px] text-slate-400 mt-1.5 leading-tight">
               Switch roles to evaluate RBAC permission controls.

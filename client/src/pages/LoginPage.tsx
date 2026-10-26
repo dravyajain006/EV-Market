@@ -27,10 +27,10 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const handleDemoLogin = async (role: UserRole) => {
+  const handleDemoLogin = async (role: UserRole, specificEmail?: string) => {
     setLoading(true);
     try {
-      await switchDemoRole(role);
+      await switchDemoRole(role, specificEmail);
       navigate('/overview');
     } finally {
       setLoading(false);
@@ -72,11 +72,11 @@ export const LoginPage: React.FC = () => {
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
-                  type="email"
+                  type="text"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="analyst@evmarket.internal"
+                  placeholder="admindravya@ev or adminkaran@ev"
                   className="w-full pl-9 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white text-xs focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
@@ -114,25 +114,36 @@ export const LoginPage: React.FC = () => {
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block text-center mb-3">
               One-Click Evaluator Sign-In
             </span>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2 mb-2">
               <button
                 type="button"
-                onClick={() => handleDemoLogin('ADMIN')}
-                className="py-2 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition-all text-center"
+                onClick={() => handleDemoLogin('ADMIN', 'admindravya@ev')}
+                className="py-2 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition-all text-center flex flex-col items-center"
               >
-                ADMIN
+                <span>Dravya Jain</span>
+                <span className="text-[9px] text-amber-400/80 font-normal">ADMIN (admindravya@ev)</span>
               </button>
               <button
                 type="button"
+                onClick={() => handleDemoLogin('ADMIN', 'adminkaran@ev')}
+                className="py-2 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-[11px] font-bold transition-all text-center flex flex-col items-center"
+              >
+                <span>Karan Raikwar</span>
+                <span className="text-[9px] text-amber-400/80 font-normal">ADMIN (adminkaran@ev)</span>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
                 onClick={() => handleDemoLogin('ANALYST')}
-                className="py-2 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-teal-300 border border-teal-500/30 text-[11px] font-bold transition-all text-center"
+                className="py-1.5 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-teal-300 border border-teal-500/30 text-[11px] font-bold transition-all text-center"
               >
                 ANALYST
               </button>
               <button
                 type="button"
                 onClick={() => handleDemoLogin('VIEWER')}
-                className="py-2 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px] font-bold transition-all text-center"
+                className="py-1.5 px-2 rounded-lg bg-slate-700/60 hover:bg-slate-700 text-slate-300 border border-slate-600 text-[11px] font-bold transition-all text-center"
               >
                 VIEWER
               </button>
