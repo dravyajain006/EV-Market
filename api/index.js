@@ -238,6 +238,43 @@ router.get('/admin/audit-logs', (_req, res) => {
   });
 });
 
+// 15. Admin: /admin/export-csv
+router.get('/admin/export-csv', (req, res) => {
+  const year = req.query.year ? parseInt(req.query.year, 10) : 2025;
+  const list = data.regions[year] || data.regions[2025] || [];
+
+  const headers = [
+    'State Code',
+    'State Name',
+    'Zone',
+    'Year',
+    'EV Registrations',
+    'Total Vehicle Registrations',
+    'EV Penetration %',
+    'Charging Stations',
+  ];
+
+  const rows = list.map(r => [
+    `"${r.stateCode}"`,
+    `"${r.stateName}"`,
+    `"${r.zone}"`,
+    r.year,
+    r.evRegistrations,
+    r.totalVehicleRegistrations,
+    r.evPenetrationPct ? Number(r.evPenetrationPct).toFixed(2) : '0.00',
+    typeof r.chargingStations === 'object' && r.chargingStations !== null
+      ? r.chargingStations.operational || 0
+      : Number(r.chargingStations || 0),
+  ]);
+
+  const csv = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+  const filename = `ev_registrations_export_${year}_${Date.now()}.csv`;
+
+  res.setHeader('Content-Type', 'text/csv');
+  res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+  return res.status(200).send(csv);
+});
+
 // Mount router under multiple prefixes so rewrites can never fail
 app.use('/api/v1', router);
 app.use('/v1', router);
