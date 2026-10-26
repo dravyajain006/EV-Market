@@ -53,7 +53,7 @@ export function getFallbackResponse(url: string, _method = 'get', body?: any) {
     return {
       success: true,
       data: {
-        token: 'local_fallback_token_' + Buffer.from(matchedUser.id).toString('base64'),
+        token: 'local_fallback_token_' + (typeof btoa !== 'undefined' ? btoa(matchedUser.id) : matchedUser.id),
         user: matchedUser,
       },
       message: 'Authentication successful (High-Fidelity Local Provider)',
@@ -114,7 +114,7 @@ export function getFallbackResponse(url: string, _method = 'get', body?: any) {
         reportId,
         reportName: 'Executive EV Analytics Suite',
         embedUrl: 'https://app.powerbi.com/reportEmbed?reportId=' + reportId,
-        embedToken: 'mock_pbi_embed_token_' + Buffer.from(reportId).toString('base64'),
+        embedToken: 'mock_pbi_embed_token_' + (typeof btoa !== 'undefined' ? btoa(reportId) : reportId),
         tokenExpiry: new Date(Date.now() + 3600000).toISOString(),
         isLiveAzure: false,
         nativeFallbackAvailable: true,

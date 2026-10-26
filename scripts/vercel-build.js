@@ -17,7 +17,12 @@ console.log('====================================================');
 
 try {
   // 1. Ensure server dependencies and Prisma client
-  console.log('\n📦 Step 1: Checking Server Dependencies...');
+  console.log('\n📦 Step 1: Checking Server Dependencies & API Data...');
+  if (!fs.existsSync(path.join(rootDir, 'api', 'data.json')) && fs.existsSync(path.join(clientDir, 'src', 'services', 'fallbackData.json'))) {
+    console.log('Syncing data to api/data.json...');
+    fs.copyFileSync(path.join(clientDir, 'src', 'services', 'fallbackData.json'), path.join(rootDir, 'api', 'data.json'));
+  }
+
   if (!fs.existsSync(path.join(serverDir, 'node_modules'))) {
     console.log('Installing server dependencies...');
     run('npm install', serverDir);
